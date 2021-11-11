@@ -1,8 +1,9 @@
+require 'pry'
 require './corrector'
 
 class Person
   attr_accessor :name, :age, :permission
-  attr_reader :id, :corrector
+  attr_reader :id, :corrector, :rented
 
   def initialize(age, name, permission: true)
     @id = Random.rand(1..1000)
@@ -10,6 +11,7 @@ class Person
     @corrector = Corrector.new(@name)
     @age = age
     @permission = permission
+    @rented = []
   end
 
   def validate_name
