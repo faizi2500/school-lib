@@ -16,13 +16,13 @@ $book_list = []
 $rentals = []
 
 def menu
-  puts 'Please choose an option by enterin a number:'
+  puts 'Please choose an option by entering a number:'
   puts '1 - List all books'
   puts '2 - List all people'
   puts '3 - Create a person'
   puts '4 - Create a book'
   puts '5 - Create a rental'
-  puts '6 - List all rentals for a given id'
+  puts '6 - List all rentals for a given person id'
   puts '7 - Exit'
   print 'What do you want to do today: '
 end
@@ -81,7 +81,7 @@ def create_new_teacher
   teacher_name = gets.chomp
   print 'Specialization: '
   teacher_speacialization = gets.chomp
-  new_teacher = Teacher.new(teacher_speacialization, teacher_age, teacher_name)
+  new_teacher = Teacher.new(teacher_speacialization, teacher_name, teacher_age)
   sleep(1)
   print "Person created successfully\n"
   $person_list << new_teacher
@@ -118,88 +118,78 @@ end
 # Create rental
 
 def book_options
-  $book_list.each_with_index do |item, index|
-    puts "#{index}) Title: #{item.book}, Author: #{item.author}"
-    puts
+  if $book_list.size.zero?
+    puts 'No books'
+  else
+    puts "List of all books: \n"
+    $book_list.each_with_index { |item, index| puts "#{index + 1}- Title: #{item.book}, Author: #{item.author}" }
+    book_number = gets.chomp
+    $book_list.each_with_index { |book, index| @selected_book = book if (index + 1) == book_number.to_i }
+    @selected_book
   end
-  book_number = gets.chomp.to_i
-  if book_number > $book_list.length
-    puts 'Please choose from the list'
-    book_options
-  end
-  book_number
 end
 
 def person_options
-  $person_list.each_with_index do |item, index|
-    puts "#{index}) [#{item.type}] Name: #{item.name}, id: #{item.id} Age: #{item.age}"
-    puts
+  if $person_list.size.zero?
+    puts 'No people exist'
+  else
+    puts 'List of all members'
+    $person_list.each do |person|
+      puts "[#{person.type}] Name: #{person.name} | Id: #{person.id} | Age: #{person.age} \n"
+    end
+    person_id = gets.chomp
+    $person_list.each { |person| @selected_person = person if person.id == person_id.to_i }
+    @selected_person
   end
-  person_number = gets.chomp.to_i
-  if person_number > $person_list.length
-    puts 'Please choose from the list'
-    person_options
-  end
-  person_number
 end
 
 def create_rental
-  if $book_list[0] and $person_list[0]
-    rent_book = book_options
-    rent_to = person_options
-    puts 'Insert date in the format YYYY-DD-MM'
-    print 'Date:'
-    enter_date = gets.chomp
-    new_rental = Rental.new(enter_date, $book_list[rent_book], $person_list[rent_to])
-    puts 'Rental Created Successfully'
-    $rentals << new_rental
-    puts
-    main
+  puts 'Select book from the list'
+  @rent_book = book_options
+  puts "Select a person fome the following list of members by id:\n"
+  @rent_to = person_options
+  puts 'Date:'
+  date = gets.chomp
+  if @selected_person && @selected_book
+    $rentals << Rental.new(date, @rent_book, @rent_to)
+    puts 'Rental created seccussfully'
+  else
+    puts 'Something went wrong. Please try again.'
+    create_rental
   end
-  puts 'Not enough books or students found'
   puts
   main
 end
 
 def show_books
-  puts 'No books added yet. Press (4) to add a book.' if $book_list.none?
-  puts
-  if $book_list.length.positive?
-    puts 'Book List'
-    $book_list.each do |item|
-      puts "Book: #{item.book}, Author: #{item.author}"
-      puts
-    end
+  if $book_list.size.zero?
+    puts 'No books'
+  else
+    puts "List of all books: \n"
+    $book_list.each_with_index { |item, index| puts "#{index + 1}- Title: #{item.book}, Author: #{item.author}" }
   end
-  puts
   main
 end
 
 def show_person
-  puts 'Nothing added to person list yet. Press (3) to add a person' if $person_list.none?
-  puts
-  if $person_list.length.positive?
-    puts 'Person List'
-    $person_list.each do |val|
-      puts
-      print "#{val.type}-ID: (#{val.id}): Name: #{val.name} Age: #{val.age} Allowed: #{val.permission}"
-      puts
+  if $person_list.size.zero?
+    puts 'No people exist'
+  else
+    puts 'List of all members'
+    $person_list.each do |person|
+      puts "[#{person.type}] Name: #{person.name} | Id: #{person.id} | Age: #{person.age} \n"
     end
   end
   puts
   main
 end
 
-def get_list(list_value)
-  show_books if list_value == '1'
-  show_person
-end
-
 def search_id(person_id)
-  puts 'Rentals:'
+  puts 'Rentals by Person Id:'
   $rentals.each do |i|
-    puts "Date: #{i.date}, Book '#{i.book.title}' by #{i.book.author}" if i.person.id == person_id
+    puts "Date: #{i.date}, Book '#{i.book.book}' by #{i.book.author}" if i.person.id == person_id
   end
+  puts
   main
 end
 
@@ -213,9 +203,9 @@ end
 def input_cases(input_received)
   case input_received
   when '1'
-    get_list('1')
+    show_books
   when '2'
-    get_list('2')
+    show_person
   when '3'
     create_person
   when '4'
