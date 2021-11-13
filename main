@@ -81,7 +81,7 @@ def create_new_teacher
   teacher_name = gets.chomp
   print 'Specialization: '
   teacher_speacialization = gets.chomp
-  new_teacher = Teacher.new(teacher_speacialization, teacher_name, teacher_age )
+  new_teacher = Teacher.new(teacher_speacialization, teacher_name, teacher_age)
   sleep(1)
   print "Person created successfully\n"
   $person_list << new_teacher
@@ -118,18 +118,6 @@ end
 # Create rental
 
 def book_options
-  # $book_list.each_with_index do |item, index|
-  #   puts "#{index}) Title: #{item.book}, Author: #{item.author}"
-  #   puts
-  # end
-  # book_number = gets.chomp.to_i
-  # if book_number > $book_list.length
-  #   puts 'Please choose from the list'
-  #   book_options
-  # end
-  # book_number += 1
-  # $book_list.each_with_index { |val, i| @book_obj = val if book_number = i}
-  # @book_obj
   if $book_list.size.zero?
     puts 'No books'
   else
@@ -137,7 +125,7 @@ def book_options
     $book_list.each_with_index { |item, index| puts "#{index + 1}- Title: #{item.book}, Author: #{item.author}" }
     book_number = gets.chomp
     $book_list.each_with_index { |book, index| @selected_book = book if (index + 1) == book_number.to_i }
-    return @selected_book
+    @selected_book
   end
 end
 
@@ -151,33 +139,14 @@ def person_options
     end
     person_id = gets.chomp
     $person_list.each { |person| @selected_person = person if person.id == person_id.to_i }
-    return @selected_person
+    @selected_person
   end
 end
-#   $person_list.each_with_index do |item, index|
-#     puts "#{index}) [#{item.type}] Name: #{item.name}, id: #{item.id} Age: #{item.age}"
-#     puts
-#   end
-#   person_number = gets.chomp.to_i
-#   # if person_number > $person_list.length
-#   #   puts 'Please choose from the list'
-#   #   person_options
-#   # end
-#   # person_number +=1
-#   # $person_list.each_with_index {|val, i| @person_obj = val if person_number = i - 1 }
-#   $person_list.each_with_index do |val, i|
-#     puts i
-#     puts person_number
-#     @person_obj = val if person_number = i
-#   end
-#   puts person_number
-#   @person_obj
-# end
 
 def create_rental
   puts 'Select book from the list'
   @rent_book = book_options
-  puts "Select a person fome the following list of members buy id:\n"
+  puts "Select a person fome the following list of members by id:\n"
   @rent_to = person_options
   puts 'Date:'
   date = gets.chomp
@@ -188,21 +157,6 @@ def create_rental
     puts 'Something went wrong. Please try again.'
     create_rental
   end
-  # if $book_list[0] and $person_list[0]
-  #   rent_book = book_options
-  #   rent_to = person_options
-  #   puts "rented_book is #{rent_book}"
-  #   puts "rent_to is #{rent_to}"
-  #   puts 'Insert date in the format YYYY-DD-MM'
-  #   print 'Date:'
-  #   enter_date = gets.chomp
-  #   new_rental = Rental.new(enter_date, rent_book, rent_to)
-  #   puts 'Rental Created Successfully'
-  #   $rentals << new_rental
-  #   puts
-  #   main
-  # end
-  # puts 'Not enough books or students found'
   puts
   main
 end
@@ -234,7 +188,6 @@ def search_id(person_id)
   puts 'Rentals by Person Id:'
   $rentals.each do |i|
     puts "Date: #{i.date}, Book '#{i.book.book}' by #{i.book.author}" if i.person.id == person_id
-    # puts i.book.rented.title
   end
   puts
   main
