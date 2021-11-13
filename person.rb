@@ -1,3 +1,4 @@
+# rubocop: disable Style/OptionalBooleanParameter
 require 'pry'
 require './corrector'
 
@@ -5,7 +6,7 @@ class Person
   attr_accessor :name, :age, :permission
   attr_reader :id, :corrector, :rented
 
-  def initialize(age, name, permission: true)
+  def initialize(age, name, permission = true)
     @id = Random.rand(1..1000)
     @name = name
     @corrector = Corrector.new(@name)
@@ -32,3 +33,5 @@ class Person
 
   private :of_age?
 end
+
+# rubocop: enable Style/OptionalBooleanParameter

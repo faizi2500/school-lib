@@ -50,3 +50,9 @@ Style/HashTransformKeys:
   Enabled: false
 Style/HashTransformValues:
   Enabled: false
+
+GlobalVars:
+  AllowedVariables:
+    - $person_list
+    - $book_list
+    - $rentals 

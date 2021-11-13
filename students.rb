@@ -1,11 +1,16 @@
+# rubocop: disable Style/OptionalBooleanParameter
+
 require './person'
 require './classroom'
+
 class Student < Person
   attr_reader :classroom
+  attr_accessor :type
 
-  def initialize(classroom, age, name = 'Unknown')
-    super(age, name)
+  def initialize(classroom, age, name = 'Unknown', permission = true, type = 'student')
+    super(age, name, permission)
     @classroom = classroom
+    @type = type
   end
 
   def student_class=(classroom)
@@ -17,3 +22,5 @@ class Student < Person
     "¯\(ツ)/¯"
   end
 end
+
+# rubocop: enable Style/OptionalBooleanParameter
